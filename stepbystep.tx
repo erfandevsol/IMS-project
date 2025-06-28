@@ -1,0 +1,70 @@
+Awesome, Erfan! Step 6 is about **updating product information** in your inventory.
+
+---
+
+## ✅ Step 6: Update a Product
+
+### 🎯 Goal:
+
+Let the user update an existing product's details (name, quantity, or price) using either the product's name or code.
+
+---
+
+### 📋 Requirements:
+
+1. Ask the user for the product name or code they want to update.
+2. If found, show current product info and ask what they want to update.
+3. Allow them to update one or more fields.
+4. Confirm successful update or show an error if the product is not found.
+
+---
+
+### 🧠 Step-by-Step Logic (in pseudocode):
+
+```python
+def update_product():
+    1. Ask the user for product name or code.
+    2. Loop through inventory to find the product.
+    3. If found:
+        a. Show current product details.
+        b. Ask which field(s) to update.
+        c. Update selected fields.
+        d. Show success message.
+    4. If not found, show error message.
+```
+
+---
+
+### 💡 Tip:
+
+Use `.strip().lower()` on inputs for consistency and better matching.
+
+---
+
+### 🛠️ Your Task:
+
+Write the `update_product()` function using the logic above.
+
+You can use this sample structure if it helps:
+
+```python
+def update_product():
+    updateQuery = input("\n# Enter Name/Code of the product to update: ").strip().lower()
+    found = False
+
+    for product in inventory:
+        if updateQuery == product.name.lower() or updateQuery == str(product.code).lower():
+            found = True
+            print("\nCurrent Info:")
+            print(product)
+
+            # Ask which field to update
+            # Get new values (if needed)
+            # Apply changes
+
+            break  # Done updating
+    if not found:
+        print("-!- Product not found -!-")
+```
+
+Let me know when you finish it or if you'd like a code review 😊
