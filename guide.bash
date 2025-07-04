@@ -1,6 +1,6 @@
 IMS_project/
 │
 ├── main.py                # Runs the app (entry point)
-├── product_manager.py     # Logic for loading, saving, and searching products
-├── inventory_ui.py        # Input/output functions (menus, printing, etc.)
-└── inventory.csv          # Data file
+|── inventory.csv          # Data file
+|-- inventory_session.csv  # Temporary data file (Created by the program)
+└-- inventory_export.xlsx  # Getting Excel output from data (Created by the program)
