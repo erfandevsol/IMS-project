@@ -6,6 +6,7 @@ import webbrowser
 projectName = "Inventory Management System"
 
 
+# Define a class to represent a product in the inventory
 class Product:
     def __init__(self, code, name, price, quantity):
         self.code = code
@@ -13,6 +14,7 @@ class Product:
         self.price = price
         self.quantity = quantity
 
+    # Print product details
     def show_info(self):
         print(f"Code: {self.code}")
         print(f"Name: {self.name}")
@@ -20,24 +22,27 @@ class Product:
         print(f"Quantity: {self.quantity}")
 
 
-SESSION_FILE = "inventory_session.csv"
-ORIGINAL_FILE = "inventory.csv"
+# Filenames for session (temporary) and original (master) inventory
+SESSION_FILE = "session_data.csv"
+ORIGINAL_FILE = "products.csv"
 
 
+# Load product data from a CSV file into the inventory list
 def load_from_csv(filename=ORIGINAL_FILE):
     if not os.path.exists(filename):
-        return
+        return  # If file doesn't exist, skip loading
     with open(filename, mode="r", newline="", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             code = int(row["Code"])
             name = row["Name"]
-            price = float(row["Price"])
+            price = int(row["Price"])
             quantity = int(row["Quantity"])
             inventory.append(Product(code, name, price, quantity))
     print(f"\n--- Inventory loaded from {ORIGINAL_FILE} ---")
 
 
+# Save current inventory to session file (used during the session only)
 def save_to_csv(filename=SESSION_FILE):
     with open(filename, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
@@ -49,22 +54,16 @@ def save_to_csv(filename=SESSION_FILE):
     print(f"\n--- Inventory saved to {SESSION_FILE} ---")
 
 
-def get_valid_float(prompt):
-    while True:
-        try:
-            return float(input(prompt))
-        except ValueError:
-            print("\n-!- Invalid input. Please enter a number -!-")
-
-
+# Utility to ensure numeric input (used for price/quantity)
 def get_valid_int(prompt):
     while True:
         try:
             return int(input(prompt))
         except ValueError:
-            print("\n-!- Invalid input. Please enter an integer -!-")
+            print("\n-!- Invalid input. Please enter an number -!-")
 
 
+# Initialize inventory list
 inventory = []
 load_from_csv()
 
@@ -72,6 +71,7 @@ print(f"\n** Welcome to {projectName} **")
 print("\n-$- What can I help you with? -$-")
 
 
+# Show all products in the inventory
 def show_all_products():
     if len(inventory) > 0:
         for i, product in enumerate(inventory, start=1):
@@ -81,12 +81,13 @@ def show_all_products():
         print("\n-!- Inventory is empty -!-")
 
 
+# Add a new product to inventory
 def add_product():
     print("\n# Please enter your product information. ")
 
     productCode = input("- Enter your product code: ")
     productName = input("- Enter your product name: ")
-    productPrice = get_valid_float("- Enter your price: ")
+    productPrice = get_valid_int("- Enter your price: ")
     productQuantity = get_valid_int("- Enter your quantity: ")
 
     product = Product(productCode, productName, productPrice, productQuantity)
@@ -97,6 +98,7 @@ def add_product():
     save_to_csv()
 
 
+# Edit an existing product by code or name
 def edit_product():
     editQuery = input("\n# Enter Name/Code of the product you want to edit: ").lower()
 
@@ -108,6 +110,7 @@ def edit_product():
             print("\nCurrent Product Info: ")
             product.show_info()
 
+            # Ask user what to change
             if input("\n- Change code? (Y/N): ").strip().lower() == "y":
                 new_code = input("- Enter new code: ")
                 product.code = new_code
@@ -119,7 +122,7 @@ def edit_product():
             if input("\n- Change price? (Y/N): ").strip().lower() == "y":
                 while True:
                     try:
-                        new_price = get_valid_float("- Enter new price: ")
+                        new_price = get_valid_int("- Enter new price: ")
                         product.price = new_price
                         break
                     except ValueError:
@@ -147,6 +150,7 @@ def edit_product():
     print("\n-!- Product not found -!-")
 
 
+# Delete a product from the inventory
 def delete_product():
     deleteQuery = input(
         "\n# Enter Name/Code of the product you want to delete: "
@@ -160,6 +164,7 @@ def delete_product():
             print("\nCurrent Product Info: ")
             product.show_info()
 
+            # Confirm before deletion
             confirmation = (
                 input("\n- Are you sure you want to delete this product? (Y/N): ")
                 .strip()
@@ -180,6 +185,7 @@ def delete_product():
     print("\n-!- Product not found -!-")
 
 
+# Sort products by name, price or quantity
 def sort_products():
     print("\n# Sort products by:")
     print("1. Name (A–Z)")
@@ -202,6 +208,7 @@ def sort_products():
         case _:
             print("\n-!- There is no such option -!-")
 
+    # Replace current list with sorted list
     inventory.clear()
     inventory.extend(sorted_list)
 
@@ -213,6 +220,7 @@ def sort_products():
     save_to_csv()
 
 
+# Search for a product by name or code
 def search_product():
     searchQuery = input("\n# Search your product by Name/Code: ").lower()
     found = False
@@ -234,6 +242,7 @@ def search_product():
         print("\n-!- Product not Found -!-")
 
 
+# Export the inventory to an Excel file and open it
 def export_to_excel():
     if not inventory:
         print("\n-!- No products to export -!-")
@@ -254,9 +263,10 @@ def export_to_excel():
     df.to_excel(filename, index=False)
 
     print(f"\n--- Excel file created: {filename} ---")
-    webbrowser.open(filename)
+    webbrowser.open(filename)  # Open file in default spreadsheet app
 
 
+# Ask user to confirm saving session changes to the original file
 def confirm_save_changes():
     print("\n# Do you want to save the changes to the original file?")
     print("1. Yes, save changes")
@@ -281,6 +291,7 @@ def confirm_save_changes():
                 print("-!- Invalid choice -!-")
 
 
+# --- Main program loop ---
 try:
     while True:
         print("\n- Program menu:")
@@ -324,6 +335,7 @@ try:
             case _:
                 print("\n-!- There is no such option -!-")
 
+# Handle Ctrl + C exit gracefully
 except KeyboardInterrupt:
     print("\n\n--- Program interrupted by user (Ctrl + C) ---")
     confirm_save_changes()
