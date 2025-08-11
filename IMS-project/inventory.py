@@ -263,7 +263,9 @@ def export_to_excel():
     df.to_excel(filename, index=False)
 
     print(f"\n--- Excel file created: {filename} ---")
-    webbrowser.open(filename)  # Open file in default spreadsheet app
+    
+    # Open file in default spreadsheet app
+    webbrowser.open(filename)  
 
 
 # Ask user to confirm saving session changes to the original file
