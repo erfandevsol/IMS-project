@@ -1,7 +1,7 @@
 import os
-import csv
-import pandas as pd
-import webbrowser
+from csv import DictReader, writer
+from pandas import DataFrame
+from webbrowser import open as webbrowser_open
 
 projectName = "Inventory Management System"
 
@@ -32,7 +32,7 @@ def load_from_csv(filename=ORIGINAL_FILE):
     if not os.path.exists(filename):
         return  # If file doesn't exist, skip loading
     with open(filename, mode="r", newline="", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
+        reader = DictReader(file)
         for row in reader:
             code = int(row["Code"])
             name = row["Name"]
@@ -45,10 +45,10 @@ def load_from_csv(filename=ORIGINAL_FILE):
 # Save current inventory to session file (used during the session only)
 def save_to_csv(filename=SESSION_FILE):
     with open(filename, mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Code", "Name", "Price", "Quantity"])
+        csv_file = writer(file)
+        csv_file.writerow(["Code", "Name", "Price", "Quantity"])
         for product in inventory:
-            writer.writerow(
+            csv_file.writerow(
                 [product.code, product.name, product.price, product.quantity]
             )
     print(f"\n--- Inventory saved to {SESSION_FILE} ---")
@@ -258,14 +258,14 @@ def export_to_excel():
         for product in inventory
     ]
 
-    df = pd.DataFrame(data)
+    df = DataFrame(data)
     filename = "inventory_export.xlsx"
     df.to_excel(filename, index=False)
 
     print(f"\n--- Excel file created: {filename} ---")
-    
+
     # Open file in default spreadsheet app
-    webbrowser.open(filename)  
+    webbrowser_open(filename)
 
 
 # Ask user to confirm saving session changes to the original file
