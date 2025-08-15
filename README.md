@@ -66,7 +66,3 @@ Whether you want to track stock levels, add or edit product details, or generate
 Contributions are highly appreciated!  
 Please fork the repo, make your improvements, and submit a pull request.   
 Ensure your code follows existing style conventions and includes relevant tests.
-
-## 📄 License
-
-This project is licensed under the MIT License — see the LICENSE file for details.
